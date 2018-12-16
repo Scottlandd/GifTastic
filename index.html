@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>GifTastic!!</title>
+    <style type='text/css'>
+        button,
+        div,
+        form,
+        input {
+            margin:10px;
+        }
+    </style>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" media="screen" href="assets/style.css" />
+    
+</head>
+<body>
+    <div class="container">
+        <h1 id="theme">PokeMemes</h1>
+
+        <div id="buttons-view"></div>
+
+        <form id="poke-form">
+                <label for="poke-search">Pokedex Search!!</label>
+                <input type="text" id="poke-input" placeholder="Search for a pokemon!!">
+                <br>
+                <input id="poke-search" type="submit" value="Search!!">
+            </form>
+        </div>
+
+        <div id="images"></div>
+        
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script type="text/javascript">
+    
+    var pokemonArray = ["Bulbasaur","Squirtle","Charmander","Pidgey","Pikachu","Eevee"];
+
+    function displayPokemonGifs() {
+        var pokemon = $(this).attr("poke-name");
+        var queryURL = "https://api.giphy.com/v1/gifs/random?api_key=AhFy2bQJASmMoBUlVqw6c4H5eslNGQzn&tag=" + pokemon;
+
+        $.ajax({
+            url: queryURL,
+            method: "GET"
+        }).then(function(response) {
+            console.log(response);
+            console.log(pokemon);
+
+            var imagesURL = response.data.image_original_url;
+            var pokeImage = $("<img>");
+
+            pokeImage.attr("src", imagesURL);
+            pokeImage.attr("alt", "poke image");
+            
+            $("#images").prepend(pokeImage);
+        });
+    }
+
+    function renderButtons() {
+
+        $("#buttons-view").empty();
+
+            for (var i = 0; i < pokemonArray.length; i++) {
+                var pokeBtn = $("<button>");
+                
+                    pokeBtn.addClass("poke-button");
+            
+                    pokeBtn.attr("poke-name", pokemonArray[i]);
+           
+                    pokeBtn.text(pokemonArray[i]);
+                   
+                    $("#buttons-view").append(pokeBtn);
+                }
+    }
+
+    $("#poke-search").on("click", function(event) {
+        event.preventDefault();
+
+        var pokeName = $("#poke-input").val().trim();
+
+        pokemonArray.push(pokeName);
+
+        renderButtons();
+    });
+    $(document).on("click", ".poke-button", displayPokemonGifs)
+    renderButtons();
+</script>
+</body>
+
+
+</html>
